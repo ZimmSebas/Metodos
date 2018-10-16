@@ -1,4 +1,4 @@
-    funcprot(0);
+funcprot(0);
 
 old = 'f';
 n = 20
@@ -8,11 +8,11 @@ for i=1:n
     old=new;
 end
 
-function y=f(x)
+function y=cuad(x)
     y=x**2
 endfunction
 
-function y=powE(x)
+function y=f(x)
     y=%e**x
 endfunction
 
@@ -23,6 +23,13 @@ function y = derivar(f,x,n,h)
     else
         y =( (f(x+h)-f(x-h)) / 2*h);
     end
+endfunction
+
+function  y = errorcalc(a,b)
+    y(1) = abs(a - b)
+    y(2) = abs(a - b)/abs(a)
+    mprintf("error absoluto %0.15f \n", y(1))
+    mprintf("error relativo %0.15f \n", y(2))
 endfunction
 
 function comp(f,x,n,h)
@@ -46,9 +53,10 @@ endfunction
 function y = taylor(f,n,v0,v) //Funcion, numero de derivadas, punto inicial, punto a ver.
     funcprot(0);
     coeficientes = (1:n)
+    coeficientes(1) = 0
     for j = 1:n
-        coeficientes(j)  = der(v0,j)/factorial(j)
-        mprintf("coef: %f %f %f\n ",der(v0,j),factorial(j),coeficientes(j));
+        coeficientes(j+1)  = der(v0,j)/factorial(j)
+        mprintf("coef: deriv: %f fact: %f  coef: %f\n ",der(v0,j),factorial(j),coeficientes(j+1));
     end
     y = horner(reverse(coeficientes),v-v0) + f(v0)
 endfunction
@@ -58,8 +66,6 @@ function y = der(x,k)
     deff('y=foo(x)','y=d'+string(k)+'f(x)');
     y = foo(x)
 endfunction
-
-//mprintf("deruiver + fact: %f\n ",derivar(trip,2,2,0.1)/factorial(2))
 
 function y = horner(arr,x)
     funcprot(0);
@@ -86,5 +92,3 @@ function y = hornerder(arr,x) //arreglo = an + an-1 + an-2...
         end
     end
 endfunction  // retorna el resultado y el resultado de la derivada
-
-
