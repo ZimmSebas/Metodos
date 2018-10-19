@@ -1,0 +1,1 @@
+Agregar una funcion que verifique si converge en tiempo n!*(tiempo de eigenvalues)
