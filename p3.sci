@@ -48,8 +48,45 @@ function y = serie6(x, c, n) //cotas x = 2 y c = 1, que onda lo de sqrt(z)?
     return;
 endfunction
 
+function y = ide(x)
+    y = x
+endfunction
+
+// Ejercicio 8
+// ge(f,x,n) es la funcion generica para iterar sobre una funcion dada
+// g1 a g4 son las funciones del ejercicio
+
+function y = g1(x)
+    y = %e^x/3
+endfunction
+
+function y = g2(x)
+    y = (%e^x - x)/2
+endfunction
+
+function y = g3(x)
+    y = log(3*x)
+endfunction
+
+function y = g4(x)
+    y = %e^x - 2*x
+endfunction
+
+function y = comp(f, x)
+    y = f(x)
+endfunction
+
+
+function y = ge(x, n)    // Funcion, Punto, Cantidad iteraciones
+    if(n == 0) y = x; return;end;
+    y = ge(g3(x), n-1);
+    return; 
+endfunction
+
+
+
 function ploty(fn,l,in,r) // Funcion, Limite Izq, Intervalo, Limite Der
-    xdel(winsid());
+    //xdel(winsid());
     x = [l:in:r];
     y = fn(x);
     n = size(x);
