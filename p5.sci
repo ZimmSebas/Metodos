@@ -45,25 +45,60 @@ function radspec = gausstest(A)
     end
 endfunction
 
-function x = gausssolver(A,b,x0,eps) //NO TERMINADO
+
+function x = gausssolver(A,b,x0,eps)
     
     sz = size(A,1)
-    x = 1:sz
-    xant = 1:sz
+    x = x0
+    xant = x
     suma = 0
+    it = 1
+    cont = 0
     
-    while(x )
-        for i = 1:sz    
-            for j = 1:sz
-                suma = suma + A(i,j)*x0(j)  
+    while(abs(norm(x-xant)) > eps | cont == 0) 
+    xant = x
+        for i = 1:sz
+            suma = 0
+            for j = 1:i-1 
+                suma = suma + A(i,j)*x(j)
             end
             
-            mprintf("%f\n",suma)
-        
-            x(i) = 1/(A(i,i))*(b(i)-suma) 
+            for j = i+1:sz
+                suma = suma + A(i,j)*x(j)
+            end
+            x(i) = 1/(A(i,i))*(b(i)-suma)
         end
-    
-    
+     cont = cont + 1
     end
     
+    mprintf("Cantidad de iteraciones: %d\n",cont);
+    
 endfunction
+
+function x = jacobisolver(A,b,x0,eps) 
+    
+    sz = size(A,1)
+    x = x0
+    xant = x
+    suma = 0
+    it = 1
+    cont = 0
+    
+    while(abs(norm(x-xant)) > eps | cont == 0) 
+    xant = x
+        for i = 1:sz
+            suma = 0
+            for j = 1:sz 
+                if (i <> j)
+                    suma = suma + A(i,j)*xant(j)
+                end
+            end
+            x(i) = 1/(A(i,i))*(b(i)-suma)
+        end
+     cont = cont + 1
+    end
+    
+    mprintf("Cantidad de iteraciones: %d\n",cont);
+    
+endfunction
+
