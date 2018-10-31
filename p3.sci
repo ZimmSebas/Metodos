@@ -84,6 +84,37 @@ function y = ge(x, n)    // Funcion, Punto, Cantidad iteraciones
 endfunction
 
 
+// Ejercicio 9
+
+function n = fnueve(X)
+    n = [1 + X(1)^2 - X(2)^2 + %e^X(1)*cos(X(2)); 2*X(1)*X(2) + %e^X(1)*sin(X(2))];
+endfunction
+
+function y = newt_mult(fn, X, N)
+    Xn = X;
+
+    mprintf("X0 = %f\n", Xn)
+    for i = 1:N
+      J = numderivative(f, Xn);
+      J = 1/J;
+      y = Xn - J*fn(Xn);
+      Xn = y
+      mprintf("X%d = %0.5f |-| %0.5f\n", i, Xn(1), Xn(2))
+    end
+endfunction
+
+// Ejercicio 10
+
+function n = fdiez(X)
+    n = [X(1)^2 + X(1)*X(2)^3 - 9; 3*X(1)^2*X(2) - 4 - X(2)^3];
+endfunction
+
+Xa = [1.2; 2.5]
+Xb = [-2; 2.5]
+Xc = [-1.2; -2.5]
+Xd = [2; -2.5]
+
+
 
 function ploty(fn,l,in,r) // Funcion, Limite Izq, Intervalo, Limite Der
     //xdel(winsid());
