@@ -115,6 +115,36 @@ Xc = [-1.2; -2.5]
 Xd = [2; -2.5]
 
 
+// Ejercicio 11
+
+function y = fonce(X)
+    y = 2*X(1) + 3*X(2)^2 + %e^(2*X(1)^2 + X(2)^2)
+endfunction
+
+
+function y = newt_mult_fin(fn, X, eps)  //Función, punto inicial, error
+    y = X;
+    Xn = X;
+    i = 0;
+   
+    mprintf("X0 = %f\n", Xn)
+   
+    while(norm(y-Xn) > eps | i == 0)      // Norma euclideana
+      Xn = y;
+      J = numderivative(fn, Xn);
+      J = 1/J;
+      y = Xn - J*fn(Xn);
+      i = i+1;
+      mprintf("X%d = %0.12f |-| %0.12f\n", i, y(1), y(2))
+    end
+    
+    [Jac, Hes] = numderivative(fn, y, [] , 2, "blockmat");
+    mprintf("Una matriz es definida positiva si sus autovalores son positivos.\n")
+    mprintf("Autovalores del hessiano de fn: ")
+    disp(spec(Hes))
+    
+endfunction
+
 
 function ploty(fn,l,in,r) // Funcion, Limite Izq, Intervalo, Limite Der
     //xdel(winsid());
