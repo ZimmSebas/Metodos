@@ -1,4 +1,3 @@
-
 function [P,L,U] = egpp(A)
     U = A;
     m = size(A, 1);
@@ -6,7 +5,7 @@ function [P,L,U] = egpp(A)
     P = eye(m,m);
     //A(:,[1 3]) = A(:,[3 1]) <- permutar
     for k = 1:m-1
-      ind = find(A(k:m,k) == max(A(k:m,k)),1)
+      ind = find(U(k:m,k) == max(U(k:m,k)),1)
       ind = ind + (k-1)
       U([k ind],k:m) = U([ind k],k:m)
       L([k ind],1:k-1) = L([ind k],1:k-1)
@@ -31,7 +30,6 @@ function x = lusolver(A,b)
         end
         c(i) = b(i)-suma 
     end
-    disp(c);
     
     x(sz) = c(sz)/U(sz,sz)
 
@@ -43,3 +41,16 @@ function x = lusolver(A,b)
         x(sz-i) = (c(sz-i)-suma)/U(sz-i,sz-i) 
     end    
 endfunction
+
+//function [L,U] = dolittle(A,b)
+//    sz = size(A,1)
+//    L = eye(sz,sz)
+//    U = eye(sz,sz)
+//    
+//    for k = 1:sz
+//        for i = 1:sz
+//            for j = 1:sz
+//                L(i,k)
+//    
+//endfunction
+
