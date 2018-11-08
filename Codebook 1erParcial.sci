@@ -16,6 +16,7 @@
 //falsapp(a,b,fun,eps,epsf). Método de la falsa posición, toma minimo, maximo, funcion, epsilon y epsilon funcion
 //newt_mult(fn, X, N) Método de Newton para una o varias variables. Toma una función fn, un vector X y N iteraciones.
 //newt_mult_fin(fn, X, eps) Método de Newton para una o varias variables con cota de finalización. Recibe función, par de elementos y épsilon.
+//puntofijo(fn,x,eps,cantmax). Método de aproximación por punto fijo, tomo una función fn, un x inicial, un épsilon de corte y una cantmax de iteraciones
 
 //3ra parte: Resolución de sistemas de ecuaciones lineales con métodos directos.
 // egpp(A). Realiza la factorización de Gauss con Pivoteo Parcial. Recibe matriz A
@@ -224,7 +225,17 @@ function y = newt_mult_fin(fn, X, eps)  //Función, punto inicial, error
     disp(spec(Hes))   
 endfunction
 
-
+//Método de punto fijo
+function y = puntofijo(fn,x,eps,cantmax)
+    y = fn(x)
+    cont = 0
+    while (abs(y-x) > eps & cont < cantmax)
+        cont = cont + 1
+        x = y
+        y = fn(x)
+    end
+    mprintf("La cantidad de iteraciones fue %d\n",cont);
+endfunction
 
 
 
@@ -593,6 +604,8 @@ endfunction
 // -------------------------------------- -----------------------------------------------------
 //                                      5ta parte: Adicionales!
 // -------------------------------------- -----------------------------------------------------
+
+
 
 
 // Comparador de tiempos de métodos armado.
