@@ -1,3 +1,6 @@
+// Ejercicio 1
+//Eliminación de Gauss con pivoteo parcial
+
 function [P,L,U] = egpp(A)
     U = A;
     m = size(A, 1);
@@ -5,11 +8,11 @@ function [P,L,U] = egpp(A)
     P = eye(m,m);
     //A(:,[1 3]) = A(:,[3 1]) <- permutar
     for k = 1:m-1
-      ind = find(U(k:m,k) == max(U(k:m,k)),1)
+      ind = find(abs(U(k:m,k)) == max(abs(U(k:m,k))),1) //Inicio pivoteo parcial
       ind = ind + (k-1)
       U([k ind],k:m) = U([ind k],k:m)
       L([k ind],1:k-1) = L([ind k],1:k-1)
-      P([k ind],:) = P([ind k],:)
+      P([k ind],:) = P([ind k],:)                       //Fin pivoteo parcial
       for j = k+1:m
           L(j,k) = U(j,k) / U(k,k)
           U(j,k:m) = U(j,k:m) - L(j,k)*U(k,k:m)
@@ -17,7 +20,7 @@ function [P,L,U] = egpp(A)
     end
 endfunction
 
-function x = lusolver(A,b)
+function x = Gesolver(A,b)
     [P, L, U] = egpp(A)
     sz = size(L,1)
     b = P*b

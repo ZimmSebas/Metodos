@@ -1,10 +1,13 @@
-//Método de Newton, toma minimo, maximo, funcion, epsilon y epsilon funcion
-function med = bsnewton(mini,maxi,fun,eps,epsf) 
+function y  = dosc(x)
+    y = sin(x) - x^2/2
+endfunction
+
+//Método de la bisección, toma minimo, maximo, funcion, epsilon y epsilon funcion
+function med = bisecc(mini,maxi,fun,eps,epsf) 
     
     if(fun(maxi).*fun(mini) > 0)
       error('Intervalos del mismo signo');
     end;
-    
     m = ((mini+maxi)/2);
     while(maxi-m > eps | abs(fun(m)) > epsf )
       m = ((mini+maxi)/2);
@@ -34,6 +37,24 @@ function seca = secante(fst,snd,func,eps,epsf)
         snd = seca
     end
 endfunction
+
+//Método de la falsa posición, toma minimo, maximo, funcion, epsilon y epsilon funcion
+function c = falsapp(a,b,fun,eps,epsf) 
+    
+    if(fun(b).*fun(a) > 0)
+      error('Intervalos del mismo signo');
+    end;
+    
+    c = b - fun(b)*(b-a)/(fun(b)-fun(a)) 
+    while(b-c > eps | abs(fun(c)) > epsf )
+      if((fun(b) < 0 & fun(c) > 0) | (fun(b) > 0 & fun(c) < 0))
+        a = c;
+      else
+        b = c;
+      end;
+      c = b - fun(b)*(b-a)/(fun(b)-fun(a))
+    end;
+endfunction;
 
 function y = serie5(x, n)
     if(n == 0) y = x; return;end;
@@ -90,16 +111,17 @@ function n = fnueve(X)
     n = [1 + X(1)^2 - X(2)^2 + %e^X(1)*cos(X(2)); 2*X(1)*X(2) + %e^X(1)*sin(X(2))];
 endfunction
 
+//Método de Newton
 function y = newt_mult(fn, X, N)
     Xn = X;
 
     mprintf("X0 = %f\n", Xn)
     for i = 1:N
-      J = numderivative(f, Xn);
+      J = numderivative(fn, Xn);
       J = 1/J;
       y = Xn - J*fn(Xn);
       Xn = y
-      mprintf("X%d = %0.5f |-| %0.5f\n", i, Xn(1), Xn(2))
+      //mprintf("X%d = %0.5f |-| %0.5f\n", i, Xn(1), Xn(2))
     end
 endfunction
 

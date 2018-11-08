@@ -1,5 +1,3 @@
-funcprot(0);
-
 old = 'f';
 n = 20
 for i=1:n
@@ -7,6 +5,25 @@ for i=1:n
     deff('y='+new+'(x)','y=numderivative('+old+',x,0.1)');
     old=new;
 end
+
+// Ejercicio 1
+
+function r = misraices(p)
+    c = coeff(p, 0)
+    b = coeff(p, 1)
+    a = coeff(p, 2)
+    
+    if(b < 0)
+        r(1) = (2*c)/(-b + sqrt(b**2 - 4*a*c))
+        r(2) = (-b + sqrt(b**2 - 4*a*c))/(2*a)
+    else
+        r(1) = (-b - sqrt(b**2 - 4*a*c))/(2*a)
+        r(2) = (2*c)/(-b - sqrt(b**2 - 4*a*c))
+    end
+endfunction
+
+p = poly([-0.0001 10000 0.0001], "x", "coeff");
+misraices(p)
 
 function y=cuad(x)
     y=x**2
@@ -16,15 +33,6 @@ function y=f(x)
     y=%e**x
 endfunction
 
-function y = derivar(f,x,n,h)
-    funcprot(0);
-    if(n==0) 
-        y = f(x);
-    else
-        y =( (f(x+h)-f(x-h)) / 2*h);
-    end
-endfunction
-
 function  y = errorcalc(a,b)
     y(1) = abs(a - b)
     y(2) = abs(a - b)/abs(a)
@@ -32,17 +40,7 @@ function  y = errorcalc(a,b)
     mprintf("error relativo %0.15f \n", y(2))
 endfunction
 
-function comp(f,x,n,h)
-    funcprot(0);
-    approxder=derivar(f,x,n,h)
-    approxnumder=numderivative(f,x,h,n)
-    mprintf("derivar: %f \n",approxder)
-    mprintf("numderiv: %f \n",approxnumder)
-    mprintf("error: %f \n",approxder-approxnumder)
-endfunction
-
 function y = reverse(arr)
-    funcprot(0);
     n = length(arr)
     y = (1:n)
     for i = 1:n
@@ -51,8 +49,6 @@ function y = reverse(arr)
 endfunction
 
 function y = taylor(f,n,v0,v) //Funcion, numero de derivadas, punto inicial, punto a ver.
-    funcprot(0);
-    coeficientes = (1:n)
     coeficientes(1) = 0
     for j = 1:n
         coeficientes(j+1)  = der(v0,j)/factorial(j)
@@ -62,13 +58,11 @@ function y = taylor(f,n,v0,v) //Funcion, numero de derivadas, punto inicial, pun
 endfunction
 
 function y = der(x,k)
-    funcprot(0);
     deff('y=foo(x)','y=d'+string(k)+'f(x)');
     y = foo(x)
 endfunction
 
 function y = horner(arr,x)
-    funcprot(0);
     n = length(arr);
     y = arr(1);
     for j = 2:n
@@ -77,7 +71,6 @@ function y = horner(arr,x)
 endfunction
 
 function y = hornerder(arr,x) //arreglo = an + an-1 + an-2...
-    funcprot(0);
     n = length(arr);
     y(1) = arr(1);
     
