@@ -4,19 +4,22 @@
 
 //1ra parte: Derivadas y Polinomio de Taylor.
 //dkf(x) siendo k el numero de derivada de f(x), deriva k veces a f en x
+//misraices(p) Función que calcula raices de polinomio p de grado 2
 //Horner(arr,x) algoritmo de horner para expresar el resultado de un polinomio en x. Toma un arr de índices y un x.
 //hornerder(arr,x). Algoritmo de horner que calcula p(x) y p'(x).
 //taylor(f,n,v0,v). Aproxima funciones con un Polinomio de Taylor. Recibe Función, nro de derivadas, punto inicial, punto buscado. 
 
 //2da parte: Métodos de cálculo de raices en funciones.
-//bsnewton(mini,maxi,eps,epsf) Método de Newton, toma minimo, maximo, funcion, epsilon y epsilon funcion
+//Ejemplo de serie
+//bsnewton(mini,maxi,eps,epsf) Método de la bisección, toma minimo, maximo, funcion, epsilon y epsilon funcion
 //secante(fst,snd,func,eps,epsf) Método Secante, toma primer elemento, segundo, funcion, epsilon y epsilon funcion
-//newt_mult(fn, X, N) Método de Newton para Multivariables, con el Jacobiano. Recibe funcion, par de elementos, y N pasos.
-//newt_mult_fin(fn, X, eps) Método de Newton para multivariables con cota de finalización. Recibe función, par de elementos y épsilon.
+//falsapp(a,b,fun,eps,epsf). Método de la falsa posición, toma minimo, maximo, funcion, epsilon y epsilon funcion
+//newt_mult(fn, X, N) Método de Newton para una o varias variables. Toma una función fn, un vector X y N iteraciones.
+//newt_mult_fin(fn, X, eps) Método de Newton para una o varias variables con cota de finalización. Recibe función, par de elementos y épsilon.
 
 //3ra parte: Resolución de sistemas de ecuaciones lineales con métodos directos.
 // egpp(A). Realiza la factorización de Gauss con Pivoteo Parcial. Recibe matriz A
-// lusolver(A,b) Resuelve un sistema con Gauss con Pivoteo Parcial. Recibe matriz A y vector b
+// Gesolver(A,b) Resuelve un sistema con Gauss con Pivoteo Parcial. Recibe matriz A y vector b
 // dolittle(A) Realiza la factorización de Doolittle. Recibe matriz A
 // dlsolver(A,b) Resuelve un sistema con Doolittle. Recibe matriz A y vector b
 // Cholesky(A) Realiza la factorización de Cholesky. Recibe matriz A.
@@ -59,6 +62,21 @@ for i=1:nder
     deff('y='+new+'(x)','y=numderivative('+old+',x,0.1)');
     old=new;
 end
+
+//Función que calcula raices de polinomio p de grado 2
+function r = misraices(p)
+    c = coeff(p, 0)
+    b = coeff(p, 1)
+    a = coeff(p, 2)
+    
+    if(b < 0)
+        r(1) = (2*c)/(-b + sqrt(b**2 - 4*a*c))
+        r(2) = (-b + sqrt(b**2 - 4*a*c))/(2*a)
+    else
+        r(1) = (-b - sqrt(b**2 - 4*a*c))/(2*a)
+        r(2) = (2*c)/(-b - sqrt(b**2 - 4*a*c))
+    end
+endfunction
 
 // Algoritmo de que aproxima funciones con un Polinomio de Taylor
 function y = taylor(f,n,v0,v) //Funcion, numero de derivadas, punto inicial, punto a ver.
@@ -109,16 +127,20 @@ endfunction
 //              2da parte: Cálculo de raices en funciones
 // -------------------------------------- ------------------------------------------
 
+//Ejemplo de serie
+function y = serie(x, c, n) //cotas x = 2 y c = 1, que onda lo de sqrt(z)?
+    if(n == 0) y = x; return;end;
+    y = serie((x+c*((x^2)-5)),c,n-1);
+    return;
+endfunction
 
 
-
-//Método de Newton, toma minimo, maximo, funcion, epsilon y epsilon funcion
-function med = bsnewton(mini,maxi,fun,eps,epsf) 
+//Método de Bisección, toma minimo, maximo, funcion, epsilon y epsilon funcion
+function med = bisecc(mini,maxi,fun,eps,epsf) 
     
     if(fun(maxi).*fun(mini) > 0)
       error('Intervalos del mismo signo');
     end;
-    
     m = ((mini+maxi)/2);
     while(maxi-m > eps | abs(fun(m)) > epsf )
       m = ((mini+maxi)/2);
@@ -149,16 +171,35 @@ function seca = secante(fst,snd,func,eps,epsf)
     end
 endfunction
 
-//Método de Newton para Multivariables, con el Jacobiano. Recibe funcion, par de elementos, y N pasos.
+//Método de la falsa posición, toma minimo, maximo, funcion, epsilon y epsilon funcion
+function c = falsapp(a,b,fun,eps,epsf) 
+    
+    if(fun(b).*fun(a) > 0)
+      error('Intervalos del mismo signo');
+    end;
+    
+    c = b - fun(b)*(b-a)/(fun(b)-fun(a)) 
+    while(b-c > eps | abs(fun(c)) > epsf )
+      if((fun(b) < 0 & fun(c) > 0) | (fun(b) > 0 & fun(c) < 0))
+        a = c;
+      else
+        b = c;
+      end;
+      c = b - fun(b)*(b-a)/(fun(b)-fun(a))
+    end;
+endfunction;
+
+//Método de Newton para una o varias variables. Toma una función fn, un vector X y N iteraciones.
 function y = newt_mult(fn, X, N)
     Xn = X;
+
     mprintf("X0 = %f\n", Xn)
     for i = 1:N
-      J = numderivative(f, Xn);
+      J = numderivative(fn, Xn);
       J = 1/J;
       y = Xn - J*fn(Xn);
       Xn = y
-      mprintf("X%d = %0.5f |-| %0.5f\n", i, Xn(1), Xn(2))
+      //mprintf("X%d = %0.5f |-| %0.5f\n", i, Xn(1), Xn(2))
     end
 endfunction
 
@@ -202,11 +243,11 @@ function [P,L,U] = egpp(A)
     P = eye(m,m);
     //A(:,[1 3]) = A(:,[3 1]) <- permutar
     for k = 1:m-1
-      ind = find(U(k:m,k) == max(U(k:m,k)),1)
+      ind = find(abs(U(k:m,k)) == max(abs(U(k:m,k))),1) //Inicio pivoteo parcial
       ind = ind + (k-1)
       U([k ind],k:m) = U([ind k],k:m)
       L([k ind],1:k-1) = L([ind k],1:k-1)
-      P([k ind],:) = P([ind k],:)
+      P([k ind],:) = P([ind k],:)                       //Fin pivoteo parcial
       for j = k+1:m
           L(j,k) = U(j,k) / U(k,k)
           U(j,k:m) = U(j,k:m) - L(j,k)*U(k,k:m)
@@ -215,7 +256,7 @@ function [P,L,U] = egpp(A)
 endfunction
 
 //Resuelve un sistema con Gauss con Pivoteo Parcial. Recibe matriz A y vector b
-function x = lusolver(A,b)
+function x = Gesolver(A,b)
     [P, L, U] = egpp(A)
     sz = size(L,1)
     b = P*b
