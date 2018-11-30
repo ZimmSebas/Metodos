@@ -133,7 +133,63 @@ endfunction
 
 //ej10
 function y = ej10(x)
-    y = e.^x
+    y = %e.^x
+endfunction
+
+function rot = Chevyshev(n)
+    for i = 1:n
+        rot(i) = cos( ((2*i)-1) *%pi/ (2*n) )  
+    end
+endfunction
+
+function pf = polinomioInter(fn,n)
+    rot = Chevyshev(n)
+    
+    sz = size(rot,1)
+    
+    for i = 1:sz
+        X(i,1) = rot(i)
+        X(i,2) = fn(rot(i))
+    end
+    
+    D = DDs(X)
+    
+    sz = size(D,1)
+    
+    p(1) = 1
+    pf = p(1) * D(1,1)
+    for j = 2:sz
+        p(j) = p(j-1) * poly([-X(j-1,1),1],'x','coeff')
+        pf = pf + p(j) * D(1,j)
+    end
+    
+endfunction
+
+function rot = polyChevyshev (n)
+    T1(1) = 1
+    T2(1) = 0
+    T2(2) = 1
+    for i = 1:n-1
+        sz2 = size(T2,1)
+        for j = 1:sz2+1
+            if (j == 1)
+                T3(j) = 0
+            else
+                T3(j) = T2(j-1)*2
+            end
+        end
+        sz1 = size(T1,1)
+        for j = 1:sz1
+            T3(j) = T3(j) - T1(j)
+        end
+        
+        T1 = T2
+        T2 = T3
+    end
+
+    pc = poly(T3','x','coeff')
+    rot = roots(pc)
+      
 endfunction
 
 
