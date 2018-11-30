@@ -1,3 +1,5 @@
+//gershgorin(A). Muestra las cotas de los autovalores de A dada dicha matriz.
+
 function gershgorin(A)
     sz = size(A, 1);
     
@@ -36,22 +38,24 @@ function ej_3(A)
    end
 endfunction
 
-function rho = potencia(A, x0, max_iter)
-    sz = size(x0, 1)
+//potencia(A, z0, max_iter). Dada una matriz A y un vector z0 (estimación de posible autovector) y una cantidad de iteraciones max_iter
+// aproxima al autovalor cuyo módulo es el radio espectral (mayor valor absoluto).
+function rho = potencia(A, z0, max_iter)
+    sz = size(z0, 1)
     for i = 1:max_iter
-        x1 = A*x0
-        disp(x1)    
+        w = A*z0
+        //disp(w)    
         if(i <> max_iter)
-            x1 = x1 / norm(x1, %inf)
-            x0 = x1
+            z = w / norm(w, %inf)
+            z0 = z
         end
     end
     //Elegimos la componente de mayor valor absoluto
     k = 1
     for i = 2:sz
-        if( abs(x1(i)) > abs(x1(k)))
+        if( abs(w(i)) > abs(w(k)))
             k = i
         end
     end
-    rho = x1(k) / x0(k)
+    rho = w(k) / z0(k)
 endfunction
