@@ -1,3 +1,4 @@
+//InterpolacionLagrange(X,pto). Interpolacion de Lagrange, toma un conjunto de pares de elementos (x,f(x)) y un pto a aproximar
 function y = InterpolacionLagrange(X,pto)
     sz = size(X,1)
 
@@ -20,9 +21,9 @@ function y = InterpolacionLagrange(X,pto)
     for i = 1:sz
         y = l(i) * X(i, 2) + y
     end
-    
 endfunction
 
+//DDs(X). Calcula diferencias divididas de Newton dado un conjunto de pares de elemntos (x,f(x))
 function D = DDs(X)
     sz = size(X,1)
     for i = 1:sz
@@ -37,7 +38,7 @@ function D = DDs(X)
     //disp(D)
 endfunction
 
-
+//InterpolacionNewton(X,pto). Interpolacion de Newton, toma un conjunto de pares de elementos X (x,f(x)) y un pto a aproximar
 function y = InterpolacionNewton(X,pto)
     sz = size(X,1)
     y = X(1,2)
@@ -54,6 +55,7 @@ endfunction
 
 // Ejercicio 7
 
+// FactoRQ(A) Factoriza una matriz A en Q,R (usado en mínimos cuadrados)
 function [Q,R] = FactoRQ(A)   // A debe tener columnas LI
     sz = size(A,2)
     Q(:,1) = A(:,1)/norm(A(:,1))
@@ -77,6 +79,7 @@ function [Q,R] = FactoRQ(A)   // A debe tener columnas LI
     end
 endfunction
 
+//minimoscuad(xi,y,gr): Toma un conjunto de puntos xi, y un conjunto de f(xi)=y, y un grado de polinomio. Aproxima un polinomio por minimos cuadrados y devuelve el error.
 function [p, err] = minimoscuad(xi, y, gr)
     szy = size(y,1);
     n = gr+1;
@@ -136,15 +139,16 @@ function y = ej10(x)
     y = %e.^x
 endfunction
 
+//Chevyshev(n). Calcula las raices de un polinomio de Chevyshev para n nodos interpolantes 
 function rot = Chevyshev(n)
     for i = 1:n
         rot(i) = cos( ((2*i)-1) *%pi/ (2*n) )  
     end
 endfunction
 
+//polinomioInter(fn,n). Dada una funcion fn y un nro de nodos n, calcula la Interpolacion de Newton de las raices de un polinomio de Chevyshev
 function pf = polinomioInter(fn,n)
     rot = Chevyshev(n)
-    
     sz = size(rot,1)
     
     for i = 1:sz
@@ -162,10 +166,48 @@ function pf = polinomioInter(fn,n)
         p(j) = p(j-1) * poly([-X(j-1,1),1],'x','coeff')
         pf = pf + p(j) * D(1,j)
     end
-    
 endfunction
 
-function rot = polyChevyshev (n)
+
+//ej11
+
+function y = ej11(x)
+    y = cos(x)
+endfunction
+
+//Chevyshev(n,a,b). Calcula las raices de un polinomio de Chevyshev para n nodos interpolantes en un intervalo general a,b. 
+function rot = ChevyshevGen(n,a,b)
+    rot = Chevyshev(n)
+    
+    for i = 1:n
+        rot(i) = (a+b+rot(i)*(b-a) )/ 2
+    end
+endfunction
+
+//polinomioInterGen(fn,n,a,b). Dada una funcion fn y un nro de nodos n, y par de puntos a,b de rango; calcula la Interpolacion de Newton de las raices de un polinomio de Chevyshev para un intervalo general[a,b]
+function pf = polinomioInterGen(fn,n,a,b)
+    rot = ChevyshevGen(n,a,b)
+    sz = size(rot,1)
+    
+    for i = 1:sz
+        X(i,1) = rot(i)
+        X(i,2) = fn(rot(i))
+    end
+    
+    D = DDs(X)
+    
+    sz = size(D,1)
+    
+    p(1) = 1
+    pf = p(1) * D(1,1)
+    for j = 2:sz
+        p(j) = p(j-1) * poly([-X(j-1,1),1],'x','coeff')
+        pf = pf + p(j) * D(1,j)
+    end
+endfunction
+
+//polyChevyshev(n) Crea el polinomio de Chevyshev de n nodos y calcula sus raices
+function rot = polyChevyshev(n)
     T1(1) = 1
     T2(1) = 0
     T2(2) = 1
@@ -189,11 +231,10 @@ function rot = polyChevyshev (n)
 
     pc = poly(T3','x','coeff')
     rot = roots(pc)
-      
 endfunction
 
-
-function ploty(fn,l,in,r) // Funcion, Limite Izq, Intervalo, Limite Der
+//ploty(fn,l,in,r). Plotea con funcion, limite izq, intervalo, limite der
+function ploty(fn,l,in,r)
 //    xdel(winsid());
     x = [l:in:r];
 //    n = size(x);
