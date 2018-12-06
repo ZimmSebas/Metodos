@@ -115,6 +115,17 @@ function [p, err] = minimoscuad(xi, y, gr)
 endfunction
 
 
+// Ejercicio 8
+
+X = [4 102.56; 4.2 113.18; 4.5 130.11; 4.7 142.05; 5.1 167.53; 5.5 195.14; 5.9 224.87; 6.3 256.73; 6.8 299.5; 7.1 326.72];
+xi = X(:,1);
+y = X(:,2);
+scatter(xi,y, "fill")
+[p1, e1] = minimoscuad(xi, y, 1);
+[p2, e2] = minimoscuad(xi, y, 2);
+[p3, e3] = minimoscuad(xi, y, 3);
+plot(xi, [horner(p1,xi) horner(p2,xi) horner(p3,xi)])
+
 //ej9
 function y = ej9(x)
     y = 1/(1+x.^2)
