@@ -39,6 +39,13 @@ function y = metodoCompSimpson(fn, a, b, n)
     y = suma * h/3;
 endfunction
 
+function y = reglaTrapecioExt(fn,x1,x2,y1,y2)
+    h = (y2-y1)*(x2-x1)/4;
+    y = h * (fn(x1,y1)+fn(x2,y1)+fn(x1,y2)+fn(x2,y2));
+endfunction
+
+
+
 function y = ln(x)
     y = log(x);
 endfunction
