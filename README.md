@@ -1,4 +1,4 @@
 # Metodos
-Prácticas en métodos numéricos
+Prácticas de métodos numéricos en el 2018
 
-Estas prácticas son con objeto de tener códigos armados para un examen, no significa que usarlos sea inteligente, sin saber como funcionan de antes
+Estas prácticas son con objeto de tener códigos armados para un examen, no significa que usarlos sea inteligente, sin saber como funcionan de antes.
