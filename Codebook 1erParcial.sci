@@ -351,16 +351,21 @@ function [U, ind] = Cholesky(A)
     n = size(A,1)
     U = zeros(n,n)
     for k = 1:n
-        t = A(k,k) - U(1:k-1,k)'*(U(1:k-1,k))
+        t = A(k,k) - U(1:k,k)'*(U(1:k,k))
         if (t <= eps)
             mprintf("Matriz no definida positiva.\n")
             ind = 0
             return
         end
+        if (A <> A')
+            mprintf("Matriz no simetrica. \n")
+            ind = 0
+            return 
+        end
         disp(t);
         U(k,k)= sqrt(t)
         for j = k+1:n
-            U(k,j) = ( A(k,j) - U(1:k-1,k)'*U(1:k-1,j) )/U(k,k)
+            U(k,j) = ( A(k,j) - U(1:k,k)'*U(1:k,j) )/U(k,k)
         end
     end
     ind = 1
